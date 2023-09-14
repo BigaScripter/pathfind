@@ -31,7 +31,7 @@ function EasyPath:DeleteAllWaypoints()
 	end
 end
 
-function EasyPath:WalkToPath(CustomPath)
+function EasyPath:WalkToPath(CustomPath,StopVariable)
 	local PlayerWalkspeed = tonumber(game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed)
 	local WalkToPathfinding = game:GetService("PathfindingService"):CreatePath()
 
@@ -49,6 +49,10 @@ function EasyPath:WalkToPath(CustomPath)
 		end
 		local WayPoints = WalkToPathfinding:GetWaypoints()
 		for i = 1, #WayPoints do
+			if StopVariable and _G[StopVariable] then
+				_G[StopVariable] = nil
+				break
+			end
 			local point = WayPoints[i]
 			if CustomPath.VisualPath == true then
 				EasyPath:CreateVisualWaypoint(point, CustomPath.VisualPathSize, CustomPath.VisualPathColor, CustomPath.VisualPathOffset)
