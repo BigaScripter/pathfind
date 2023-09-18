@@ -31,6 +31,8 @@ function EasyPath:DeleteAllWaypoints()
 	end
 end
 
+local thread = nil
+
 function EasyPath:WalkToPath(CustomPath,StopVariable)
 	local PlayerWalkspeed = tonumber(game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed)
 	local WalkToPathfinding = game:GetService("PathfindingService"):CreatePath()
@@ -49,9 +51,18 @@ function EasyPath:WalkToPath(CustomPath,StopVariable)
 		end
 		local WayPoints = WalkToPathfinding:GetWaypoints()
 		for i = 1, #WayPoints do
-			if StopVariable and _G[StopVariable] then
-				_G[StopVariable] = nil
-				break
+			if thread then task.cancel(thread) end
+			if StopVariable then
+				thread = task.spawn(function()
+					while task.wait() do
+						if _G[StopVariable] then
+							_G[StopVariable] = nil
+							game:GetService("Players").LocalPlayer.Character.Humanoid:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+							break
+						end
+						task.wait(.1)
+					end
+				end)
 			end
 			local point = WayPoints[i]
 			if CustomPath.VisualPath == true then
