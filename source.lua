@@ -58,6 +58,7 @@ function EasyPath:WalkToPath(CustomPath,StopVariable)
 						if _G[StopVariable] then
 							_G[StopVariable] = nil
 							game:GetService("Players").LocalPlayer.Character.Humanoid:MoveTo(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+								_G.RUN = false
 							break
 						end
 						task.wait(.1)
